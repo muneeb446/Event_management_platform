@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Feedback Submitted — EventHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#071739;color:white;font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:24px;padding:48px;text-align:center;max-width:420px;animation:pop .4s ease;}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.icon{font-size:72px;margin-bottom:20px;}
+h2{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;margin-bottom:8px;}
+p{color:rgba(255,255,255,.5);margin-bottom:28px;}
+.btn-home{background:linear-gradient(135deg,#7c2fe8,#e040fb);border:none;color:white;border-radius:12px;padding:13px 28px;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;text-decoration:none;display:inline-block;transition:.2s;}
+.btn-home:hover{opacity:.9;color:white;transform:translateY(-2px);}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">🎉</div>
+  <h2>Thank You, {{ name }}!</h2>
+  <p>Your feedback has been submitted successfully. It helps us improve future events.</p>
+  <a href="/" class="btn-home">🏠 Back to Home</a>
+</div>
+</body>
+</html>

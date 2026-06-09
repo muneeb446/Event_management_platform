@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ticket EVT{{ reg.id }} — EventHub</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#071739;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;}
+.ticket-wrap{background:white;border-radius:20px;overflow:hidden;width:480px;max-width:100%;box-shadow:0 24px 60px rgba(0,0,0,.6);}
+.ticket-header{background:linear-gradient(135deg,#7c2fe8,#e040fb);padding:26px;text-align:center;color:white;}
+.ticket-header h2{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;margin:0;}
+.ticket-id{font-size:13px;opacity:.8;margin-top:4px;}
+.ticket-body{padding:24px;color:#1e293b;}
+.row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:14px;}
+.row:last-child{border:none;}
+.lbl{color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:.7px;}
+.val{font-weight:600;text-align:right;max-width:60%;}
+.ticket-footer{background:#f8fafc;padding:20px;text-align:center;border-top:2px dashed #e2e8f0;}
+.qr{width:110px;border-radius:8px;}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:20px;background:#f0f4ff;}
+.btn{padding:10px 20px;border-radius:10px;border:none;font-weight:700;font-size:14px;cursor:pointer;font-family:'Syne',sans-serif;}
+.btn-print{background:linear-gradient(135deg,#7c2fe8,#e040fb);color:white;}
+.btn-dl{background:#1e293b;color:white;text-decoration:none;display:inline-block;}
+.btn-back{background:#e2e8f0;color:#1e293b;text-decoration:none;display:inline-block;}
+@media print{.actions{display:none!important;}}
+</style>
+</head>
+<body>
+<div>
+  <div class="ticket-wrap" id="ticketPrint">
+    <div class="ticket-header">
+      <div style="font-size:12px;opacity:.8;margin-bottom:3px;">EVENT TICKET</div>
+      <h2>{{ reg.title }}</h2>
+      <div class="ticket-id">Ticket ID: EVT{{ reg.id }}</div>
+    </div>
+    <div class="ticket-body">
+      <div class="row"><span class="lbl">Name</span><span class="val">{{ reg.user_name }}</span></div>
+      <div class="row"><span class="lbl">College</span><span class="val">{{ reg.college }}</span></div>
+      <div class="row"><span class="lbl">Degree</span><span class="val">{{ reg.degree }}</span></div>
+      <div class="row"><span class="lbl">Date</span><span class="val">{{ reg.date }}</span></div>
+      <div class="row"><span class="lbl">Time</span><span class="val">{{ reg.time }}</span></div>
+      <div class="row"><span class="lbl">Location</span><span class="val">{{ reg.location }}</span></div>
+      <div class="row"><span class="lbl">Category</span><span class="val">{{ reg.category }}</span></div>
+    </div>
+    <div class="ticket-footer">
+      <img src="/static/qr_codes/{{ qr_fn }}" class="qr" alt="QR Code">
+      <p style="color:#94a3b8;font-size:11px;margin-top:8px;">Scan at event entrance</p>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn btn-print" onclick="window.print()">🖨 Print Ticket</button>
+    <a href="/download_ticket/{{ reg.user_name }}/{{ reg.id }}" class="btn btn-dl">⬇ Download PDF</a>
+    <a href="/my_registrations" class="btn btn-back">← My Registrations</a>
+  </div>
+</div>
+</body>
+</html>

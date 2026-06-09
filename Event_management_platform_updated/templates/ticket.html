@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ticket — EventHub</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans&display=swap" rel="stylesheet">
+<style>
+body{background:#071739;color:white;font-family:'DM Sans',sans-serif;}
+.navbar-brand{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;}
+.navbar-brand span{color:#e040fb;}
+.ticket-wrap{background:white;border-radius:20px;overflow:hidden;max-width:500px;margin:0 auto;box-shadow:0 24px 60px rgba(0,0,0,.5);}
+.ticket-header{background:linear-gradient(135deg,#7c2fe8,#e040fb);padding:28px;text-align:center;color:white;}
+.ticket-header h2{font-family:'Syne',sans-serif;font-weight:800;font-size:24px;margin:0;}
+.ticket-id{font-size:13px;opacity:.8;margin-top:4px;}
+.ticket-body{padding:28px;color:#1e293b;}
+.ticket-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #f1f5f9;font-size:14px;}
+.ticket-row:last-child{border:none;}
+.ticket-label{color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:.7px;}
+.ticket-val{font-weight:600;text-align:right;}
+.ticket-footer{background:#f8fafc;padding:20px;text-align:center;border-top:2px dashed #e2e8f0;}
+.qr-img{width:120px;height:120px;border-radius:10px;}
+.btn-download{background:linear-gradient(135deg,#7c2fe8,#e040fb);border:none;color:white;border-radius:12px;padding:12px 24px;font-weight:700;text-decoration:none;font-family:'Syne',sans-serif;display:inline-block;transition:.2s;}
+.btn-download:hover{opacity:.9;color:white;transform:translateY(-2px);}
+.btn-cert{background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.4);color:#fbbf24;border-radius:12px;padding:12px 24px;font-weight:700;text-decoration:none;display:inline-block;transition:.2s;}
+.btn-cert:hover{background:rgba(251,191,36,.25);color:#fbbf24;}
+.success-banner{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:14px;padding:16px;text-align:center;margin-bottom:24px;color:#6ee7b7;}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-4 py-3">
+  <a class="navbar-brand" href="/">Event<span>Hub</span></a>
+  <div class="d-flex gap-2">
+    <a href="/my_registrations" class="btn btn-outline-light btn-sm">🎟 My Registrations</a>
+    <a href="/" class="btn btn-outline-light btn-sm">🏠 Home</a>
+  </div>
+</nav>
+<div class="container py-5">
+  <div class="success-banner">
+    ✅ Registration Successful! Your ticket has been generated.
+  </div>
+  <div class="ticket-wrap">
+    <div class="ticket-header">
+      <div style="font-size:13px;opacity:.8;margin-bottom:4px;">EVENT TICKET</div>
+      <h2>{{ event['title'] }}</h2>
+      <div class="ticket-id">Ticket ID: EVT{{ reg_id }}</div>
+    </div>
+    <div class="ticket-body">
+      <div class="ticket-row"><span class="ticket-label">Name</span><span class="ticket-val">{{ name }}</span></div>
+      <div class="ticket-row"><span class="ticket-label">College</span><span class="ticket-val">{{ college }}</span></div>
+      <div class="ticket-row"><span class="ticket-label">Degree</span><span class="ticket-val">{{ degree }}</span></div>
+      <div class="ticket-row"><span class="ticket-label">Age</span><span class="ticket-val">{{ age }}</span></div>
+      <div class="ticket-row"><span class="ticket-label">Date</span><span class="ticket-val">{{ event['date'] }}</span></div>
+      <div class="ticket-row"><span class="ticket-label">Time</span><span class="ticket-val">{{ event['time'] }}</span></div>
+      <div class="ticket-row"><span class="ticket-label">Location</span><span class="ticket-val">{{ event['location'] }}</span></div>
+      <div class="ticket-row"><span class="ticket-label">Payment</span><span class="ticket-val">{{ payment_method }}</span></div>
+    </div>
+    <div class="ticket-footer">
+      <img src="/static/qr_codes/{{ qr_filename }}" class="qr-img" alt="QR Code"><br>
+      <small style="color:#94a3b8;font-size:11px;margin-top:8px;display:block;">Scan at event entrance</small>
+    </div>
+  </div>
+  <div class="d-flex gap-3 justify-content-center mt-4 flex-wrap">
+    <a href="/download_ticket/{{ safe_name }}/{{ reg_id }}" class="btn-download">⬇ Download Ticket PDF</a>
+    <a href="/download_certificate/{{ safe_name }}/{{ reg_id }}" class="btn-cert">📜 Download Certificate</a>
+    <a href="/" class="btn btn-outline-light" style="border-radius:12px;padding:12px 24px;font-weight:600;">🏠 Back to Home</a>
+  </div>
+</div>
+{% include 'chatbot.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

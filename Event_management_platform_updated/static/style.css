@@ -1,0 +1,273 @@
+body{
+    background:#f1f5f9;
+    font-family:'Poppins',sans-serif;
+    overflow-x:hidden;
+    margin:0;
+    padding:0;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:260px;
+    height:100vh;
+    background:#0b1120;
+    position:fixed;
+    top:0;
+    left:0;
+    padding:25px 18px;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:40px;
+}
+
+.logo img{
+    width:120px;
+}
+
+/* SIDEBAR LINKS */
+
+.sidebar a{
+    display:block;
+    color:white;
+    text-decoration:none;
+    padding:14px 18px;
+    margin-bottom:12px;
+    border-radius:12px;
+    font-size:16px;
+    background:transparent;
+}
+
+.sidebar a:hover{
+    background:#4f46e5;
+}
+
+/* MAIN CONTENT */
+
+.main-content{
+    margin-left:280px;
+    padding:30px;
+}
+
+/* WELCOME */
+
+.welcome-box{
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    margin-bottom:25px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.welcome-box h2{
+    margin:0;
+}
+
+/* CARDS */
+
+.premium-card{
+    border-radius:20px;
+    padding:30px;
+    color:white;
+    margin-bottom:20px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.15);
+}
+
+.card{
+    border:none;
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.card img{
+    height:220px;
+    object-fit:cover;
+}
+
+.card-body{
+    background:white;
+}
+
+/* BUTTONS */
+
+.btn{
+    border-radius:10px;
+}
+
+/* FORM */
+
+input,
+select{
+    border-radius:10px !important;
+    padding:10px !important;
+}
+
+/* TABLE */
+
+.table{
+    background:white;
+    border-radius:15px;
+    overflow:hidden;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:991px){
+
+.sidebar{
+    width:100%;
+    height:auto;
+    position:relative;
+}
+
+.main-content{
+    margin-left:0;
+}
+
+}
+
+/* LIGHT MODE */
+
+.light-mode{
+    background:#f3f4f6 !important;
+    color:black !important;
+}
+
+.light-mode .navbar{
+    background:white !important;
+}
+
+.light-mode .card-body{
+    background:white !important;
+    color:black !important;
+}
+
+.light-mode .section-title{
+    color:black !important;
+}
+
+.light-mode .search-box input{
+    background:white;
+    color:black;
+}
+
+.light-mode footer{
+    background:#e5e7eb !important;
+    color:black;
+}
+/* PREMIUM TOP BUTTONS */
+
+.theme-btn{
+    width:48px;
+    height:48px;
+    border:none;
+    border-radius:14px;
+    background:white;
+    font-size:20px;
+    cursor:pointer;
+    transition:0.3s;
+    box-shadow:0 5px 15px rgba(0,0,0,0.15);
+}
+
+.theme-btn:hover{
+    transform:translateY(-3px);
+}
+
+.premium-btn{
+    padding:12px 22px;
+    border-radius:14px;
+    text-decoration:none;
+    color:white;
+    font-weight:600;
+    transition:0.3s;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.premium-btn:hover{
+    transform:translateY(-3px);
+    color:white;
+}
+
+.admin-btn{
+    background:linear-gradient(135deg,#f59e0b,#ea580c);
+}
+
+.gallery-btn{
+    background:linear-gradient(135deg,#06b6d4,#2563eb);
+}
+
+.user-btn{
+    border:none;
+    background:white;
+    padding:12px 20px;
+    border-radius:14px;
+    font-weight:600;
+    box-shadow:0 5px 15px rgba(0,0,0,0.15);
+}
+/* THEME BUTTON */
+
+.theme-btn{
+    border:none;
+    background:white;
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    font-size:20px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.theme-btn:hover{
+    transform:scale(1.1);
+}
+
+/* PREMIUM BUTTONS */
+
+.premium-btn{
+    padding:10px 18px;
+    border-radius:12px;
+    text-decoration:none;
+    color:white;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.admin-btn{
+    background:linear-gradient(135deg,#f59e0b,#ea580c);
+}
+
+.gallery-btn{
+    background:linear-gradient(135deg,#06b6d4,#2563eb);
+}
+
+.premium-btn:hover{
+    transform:translateY(-3px);
+    color:white;
+}
+
+/* USER BUTTON */
+
+.user-btn{
+    border:none;
+    background:linear-gradient(135deg,#8b5cf6,#6366f1);
+    color:white;
+    padding:10px 18px;
+    border-radius:12px;
+    font-weight:bold;
+}
+body{
+    background:#071739;
+}
+
+.card{
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}

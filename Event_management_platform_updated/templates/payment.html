@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Payment — EventHub</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans&display=swap" rel="stylesheet">
+<style>
+body{background:#071739;color:white;font-family:'DM Sans',sans-serif;}
+.navbar-brand{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;}
+.navbar-brand span{color:#e040fb;}
+.card-dark{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:32px;}
+.method-btn{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:16px;cursor:pointer;transition:.2s;text-align:center;}
+.method-btn.selected,.method-btn:hover{background:rgba(124,47,232,.2);border-color:#7c2fe8;}
+.btn-pay{background:linear-gradient(135deg,#7c2fe8,#e040fb);border:none;color:white;border-radius:12px;padding:14px;font-size:16px;font-weight:700;width:100%;font-family:'Syne',sans-serif;}
+.summary-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-4 py-3">
+  <a class="navbar-brand" href="/">Event<span>Hub</span></a>
+</nav>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card-dark">
+        <h4 style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:24px;">💳 Complete Registration</h4>
+        <div class="mb-4 p-3" style="background:rgba(255,255,255,.04);border-radius:12px;">
+          <div class="summary-row"><span style="color:rgba(255,255,255,.5);">Event</span><strong>{{ event['title'] }}</strong></div>
+          <div class="summary-row"><span style="color:rgba(255,255,255,.5);">Date</span><span>{{ event['date'] }}</span></div>
+          <div class="summary-row"><span style="color:rgba(255,255,255,.5);">Name</span><span>{{ pending.name }}</span></div>
+          <div class="summary-row"><span style="color:rgba(255,255,255,.5);">College</span><span>{{ pending.college }}</span></div>
+          <div class="summary-row" style="border:none;"><span style="color:rgba(255,255,255,.5);">Fee</span>
+            <strong style="color:#4ade80;">{% if event['fee'] and event['fee']|int > 0 %}₹{{ event['fee'] }}{% else %}FREE{% endif %}</strong>
+          </div>
+        </div>
+        <p style="color:rgba(255,255,255,.5);font-size:13px;margin-bottom:12px;">Select Payment Method:</p>
+        <form method="POST">
+          <div class="row g-3 mb-4" id="methodBtns">
+            {% for method in ['Free Registration','UPI / GPay','Cash at Desk','Online Transfer'] %}
+            <div class="col-6">
+              <div class="method-btn {% if loop.first %}selected{% endif %}" onclick="selectMethod('{{ method }}',this)">
+                {{ '✅' if loop.first else ('📱' if loop.index==2 else ('💵' if loop.index==3 else '🏦')) }} {{ method }}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <input type="hidden" name="payment_method" id="payMethod" value="Free Registration">
+          <button type="submit" class="btn-pay">✅ Confirm Registration</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% include 'chatbot.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function selectMethod(val, el){
+  document.querySelectorAll('.method-btn').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('payMethod').value = val;
+}
+</script>
+</body>
+</html>

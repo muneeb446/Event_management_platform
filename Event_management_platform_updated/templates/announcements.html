@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Announcements — EventHub</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans&display=swap" rel="stylesheet">
+<style>
+body{background:#071739;color:#e8f0fe;font-family:'DM Sans',sans-serif;}
+.navbar-brand{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;}
+.navbar-brand span{color:#e040fb;}
+.page-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#fff;}
+.ann-card{background:#0f2444;border:1px solid #1e3a5f;border-radius:16px;padding:24px;margin-bottom:16px;transition:.2s;border-left:4px solid #1e3a5f;}
+.ann-card:hover{border-color:#7c2fe8;background:#132040;}
+.ann-card.high{border-left-color:#ef4444;}
+.ann-card.normal{border-left-color:#7c2fe8;}
+.ann-card.low{border-left-color:#22c55e;}
+.ann-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#fff;margin-bottom:8px;}
+.ann-msg{color:#a8c4e8;font-size:14px;line-height:1.6;margin-bottom:10px;}
+.ann-meta{font-size:12px;color:#7a9cc5;}
+.priority-badge{border-radius:20px;padding:3px 12px;font-size:11px;font-weight:600;}
+.p-high{background:rgba(239,68,68,.2);color:#fca5a5;}
+.p-normal{background:rgba(124,47,232,.2);color:#c4b5fd;}
+.p-low{background:rgba(34,197,94,.2);color:#86efac;}
+.empty{text-align:center;padding:60px;color:#7a9cc5;}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-4 py-3">
+  <a class="navbar-brand" href="/">Event<span>Hub</span></a>
+  <a href="/" class="btn btn-outline-light btn-sm">← Home</a>
+</nav>
+<div class="container py-5">
+  <div class="page-title mb-2">📢 Announcements</div>
+  <p style="color:#7a9cc5;margin-bottom:28px;">Latest updates from admin</p>
+  {% if items %}
+    {% for a in items %}
+    <div class="ann-card {{ a.priority or 'normal' }}">
+      <div class="d-flex justify-content-between align-items-start mb-1">
+        <div class="ann-title">📢 {{ a.title }}</div>
+        <span class="priority-badge p-{{ a.priority or 'normal' }}">
+          {{ '🔴 Urgent' if a.priority=='high' else ('🟢 Info' if a.priority=='low' else '🟣 Normal') }}
+        </span>
+      </div>
+      <div class="ann-msg">{{ a.message }}</div>
+      <div class="ann-meta">🕒 {{ a.created_at }}</div>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty">
+    <div style="font-size:60px;">📢</div>
+    <h5 style="margin-top:16px;">No announcements yet</h5>
+    <p>Admin will post updates here.</p>
+  </div>
+  {% endif %}
+</div>
+{% include 'chatbot.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

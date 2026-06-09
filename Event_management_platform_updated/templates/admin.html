@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin Panel — EventHub</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b1628; --sidebar:#0d1f3c; --card:#132040;
+  --border:#1e3a5f; --text:#e8f0fe; --muted:#7a9cc5;
+  --purple:#7c2fe8; --pink:#e040fb; --accent:#4f8ef7;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;margin:0;}
+
+/* NAVBAR */
+.top-nav{background:#0d1f3c;border-bottom:1px solid var(--border);padding:14px 28px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.brand{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;}
+.brand span{color:#e040fb;}
+.nav-actions{display:flex;gap:10px;}
+.btn-nav{padding:8px 18px;border-radius:10px;border:none;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;}
+.btn-home{background:rgba(255,255,255,.1);color:#fff;}
+.btn-home:hover{background:rgba(255,255,255,.18);color:#fff;}
+.btn-logout{background:rgba(239,68,68,.2);color:#fca5a5;border:1px solid rgba(239,68,68,.3);}
+.btn-logout:hover{background:rgba(239,68,68,.35);color:#fca5a5;}
+
+/* LAYOUT */
+.layout{display:flex;min-height:calc(100vh - 56px);}
+
+/* SIDEBAR */
+.sidebar{width:230px;background:var(--sidebar);border-right:1px solid var(--border);padding:20px 0;flex-shrink:0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;}
+.sidebar-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;padding:16px 20px 6px;font-weight:600;}
+.nav-link{display:flex;align-items:center;gap:10px;padding:11px 20px;color:#c0d8f0;font-size:14px;cursor:pointer;transition:.18s;border:none;background:none;width:100%;text-align:left;text-decoration:none;border-left:3px solid transparent;}
+.nav-link:hover{background:rgba(79,142,247,.15);color:#ffffff;border-left-color:transparent;}
+.nav-link.active{background:rgba(124,47,232,.25);color:#ffffff;border-left-color:#7c2fe8;font-weight:600;}
+.sidebar-label{color:#5a7a9a;font-size:10px;text-transform:uppercase;letter-spacing:1.2px;padding:16px 20px 6px;font-weight:600;}
+.nav-link .icon{font-size:17px;width:22px;text-align:center;}
+
+/* MAIN */
+.main{flex:1;padding:28px;overflow-x:hidden;}
+.section{display:none;animation:fadeIn .25s ease;}
+.section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* PAGE TITLE */
+.page-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:#ffffff;margin-bottom:6px;}
+.page-sub{font-size:14px;color:#7a9cc5;margin-bottom:24px;}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:28px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;display:flex;align-items:center;gap:16px;}
+.stat-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.stat-num{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:#fff;line-height:1;}
+.stat-lbl{font-size:13px;color:var(--muted);margin-top:2px;}
+
+/* CARD */
+.card-panel{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:24px;}
+.card-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:#fff;margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+
+/* TABLE */
+.table{color:#e8f0fe !important;margin-bottom:0;}
+.table thead th{color:#7a9cc5 !important;font-size:11px;text-transform:uppercase;letter-spacing:.8px;border-color:#1e3a5f !important;background:#0b1e38 !important;padding:12px 14px;font-weight:600;}
+.table tbody td{border-color:#1e3a5f !important;padding:12px 14px;color:#e8f0fe !important;vertical-align:middle;font-size:14px;background:transparent !important;}
+.table tbody tr{transition:background .15s;}
+.table tbody tr:hover td{background:rgba(79,142,247,.12) !important;color:#fff !important;}
+.table-striped>tbody>tr:nth-of-type(odd)>*{background:#0d1f3c !important;color:#e8f0fe !important;}
+.table-striped>tbody>tr:nth-of-type(even)>*{background:#0b1628 !important;color:#e8f0fe !important;}
+/* Override Bootstrap completely */
+.table>:not(caption)>*>*{background-color:transparent !important;color:#e8f0fe !important;border-color:#1e3a5f !important;}
+
+/* FORM */
+.form-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px;font-weight:600;}
+.form-control,.form-select{background:rgba(255,255,255,.07) !important;border:1px solid var(--border) !important;color:#fff !important;border-radius:10px;padding:10px 14px;}
+.form-control:focus,.form-select:focus{background:rgba(124,47,232,.15) !important;border-color:#7c2fe8 !important;color:#fff !important;box-shadow:0 0 0 3px rgba(124,47,232,.15) !important;}
+.form-control::placeholder{color:rgba(255,255,255,.3) !important;}
+.form-select option{background:#0d1f3c;color:#fff;}
+
+/* BUTTONS */
+.btn-primary-ev{background:linear-gradient(135deg,#7c2fe8,#e040fb);border:none;color:#fff;border-radius:10px;padding:10px 22px;font-weight:600;font-size:14px;cursor:pointer;transition:.2s;}
+.btn-primary-ev:hover{opacity:.9;transform:translateY(-1px);}
+.btn-edit{background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);color:#fbbf24;border-radius:8px;padding:5px 12px;font-size:12px;text-decoration:none;transition:.2s;white-space:nowrap;}
+.btn-edit:hover{background:rgba(251,191,36,.25);color:#fbbf24;}
+.btn-del{background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;border-radius:8px;padding:5px 12px;font-size:12px;text-decoration:none;transition:.2s;white-space:nowrap;}
+.btn-del:hover{background:rgba(239,68,68,.25);color:#fca5a5;}
+
+/* BADGE */
+.badge-cat{background:rgba(124,47,232,.25);color:#c4b5fd;border:1px solid rgba(124,47,232,.3);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:500;}
+
+/* SEARCH */
+.search-input{background:rgba(255,255,255,.07) !important;border:1px solid var(--border) !important;color:#fff !important;border-radius:10px;padding:9px 14px;font-size:14px;width:100%;outline:none;margin-bottom:16px;font-family:'DM Sans',sans-serif;}
+.search-input::placeholder{color:rgba(255,255,255,.3) !important;}
+.search-input:focus{border-color:#7c2fe8 !important;background:rgba(124,47,232,.1) !important;}
+
+/* STARS */
+.stars{color:#fbbf24;letter-spacing:1px;}
+
+@media(max-width:768px){.sidebar{display:none;}.main{padding:16px;}}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div class="top-nav">
+  <div class="brand">Event<span>Hub</span> <span style="font-size:12px;color:var(--muted);font-family:'DM Sans';font-weight:400;">Admin Panel</span></div>
+  <div class="nav-actions">
+    <a href="/" class="btn-nav btn-home">🏠 Home</a>
+    <a href="/logout" class="btn-nav btn-logout">🚪 Logout</a>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-label">Overview</div>
+    <button class="nav-link active" onclick="show('dashboard',this)"><span class="icon">📊</span> Dashboard</button>
+
+    <div class="sidebar-label">Content</div>
+    <button class="nav-link" onclick="show('events',this)"><span class="icon">📅</span> Events</button>
+    <button class="nav-link" onclick="show('add-event',this)"><span class="icon">➕</span> Add Event</button>
+    <button class="nav-link" onclick="show('gallery-sec',this)"><span class="icon">🖼</span> Gallery</button>
+
+    <div class="sidebar-label">People</div>
+    <button class="nav-link" onclick="show('registrations',this)"><span class="icon">🎟</span> Registrations</button>
+    <button class="nav-link" onclick="show('users',this)"><span class="icon">👥</span> Users</button>
+    <button class="nav-link" onclick="show('feedback',this)"><span class="icon">💬</span> Feedback</button>
+    <button class="nav-link" onclick="show('announcements',this)"><span class="icon">📢</span> Announcements</button>
+    <button class="nav-link" onclick="show('broadcast',this)"><span class="icon">📣</span> Broadcast</button>
+    <button class="nav-link" onclick="show('contacts',this)"><span class="icon">✉️</span> Messages</button>
+    <button class="nav-link" onclick="show('export',this)"><span class="icon">📥</span> Export CSV</button>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- ── DASHBOARD ── -->
+    <div class="section active" id="sec-dashboard">
+      <div class="page-title">📊 Dashboard</div>
+      <div class="page-sub">Welcome back, Admin! Here's your platform overview.</div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(124,47,232,.2);">📅</div>
+          <div><div class="stat-num">{{ total_events }}</div><div class="stat-lbl">Total Events</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(224,64,251,.2);">👥</div>
+          <div><div class="stat-num">{{ total_users }}</div><div class="stat-lbl">Registered Users</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(74,222,128,.2);">🎟</div>
+          <div><div class="stat-num">{{ total_registrations }}</div><div class="stat-lbl">Registrations</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(251,191,36,.2);">💬</div>
+          <div><div class="stat-num">{{ feedbacks|length }}</div><div class="stat-lbl">Feedbacks</div></div>
+        </div>
+      </div>
+
+      <div class="card-panel">
+        <div class="card-title">🕐 Recent Registrations</div>
+        <div style="overflow-x:auto;">
+        <table class="table">
+          <thead><tr><th>Ticket</th><th>Name</th><th>Event</th><th>College</th></tr></thead>
+          <tbody>
+            {% for r in registrations[:8] %}
+            <tr>
+              <td><span style="color:#7c2fe8;font-weight:600;">EVT{{ r.id }}</span></td>
+              <td>{{ r.user_name }}</td>
+              <td>{{ r.title }}</td>
+              <td>{{ r.college }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── EVENTS ── -->
+    <div class="section" id="sec-events">
+      <div class="page-title">📅 Manage Events</div>
+      <div class="page-sub">{{ total_events }} events total</div>
+      <div class="card-panel">
+        <div style="overflow-x:auto;">
+        <table class="table">
+          <thead><tr><th>#</th><th>Title</th><th>Date</th><th>Time</th><th>Location</th><th>Category</th><th>Actions</th></tr></thead>
+          <tbody>
+            {% for e in events %}
+            <tr>
+              <td style="color:var(--muted);">#{{ e.id }}</td>
+              <td style="font-weight:600;">{{ e.title }}</td>
+              <td>{{ e.date }}</td>
+              <td>{{ e.time }}</td>
+              <td>{{ e.location }}</td>
+              <td><span class="badge-cat">{{ e.category }}</span></td>
+              <td>
+                <div style="display:flex;gap:6px;">
+                  <a href="/edit_event/{{ e.id }}" class="btn-edit">✏️ Edit</a>
+                  <a href="/delete_event/{{ e.id }}" class="btn-del" onclick="return confirm('Delete {{ e.title }}?')">🗑 Delete</a>
+                  <a href="/admin/attendance/{{ e.id }}" class="btn-edit" style="background:rgba(74,222,128,.15);border-color:rgba(74,222,128,.3);color:#86efac;">📋 Attendance</a>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ADD EVENT ── -->
+    <div class="section" id="sec-add-event">
+      <div class="page-title">➕ Add New Event</div>
+      <div class="page-sub">Fill in the details below to create a new event</div>
+      <div class="card-panel">
+        <form method="POST" action="/add_event" enctype="multipart/form-data">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Event Title *</label>
+              <input type="text" name="title" class="form-control" placeholder="e.g. Annual Hackathon 2026" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Category *</label>
+              <select name="category" class="form-select" required>
+                <option value="" disabled selected>Select category</option>
+                <option>Workshop</option><option>Technical</option><option>Cultural</option>
+                <option>Sports</option><option>Seminar</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Date *</label>
+              <input type="text" name="date" class="form-control" placeholder="e.g. 20 June 2026" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Time *</label>
+              <input type="text" name="time" class="form-control" placeholder="e.g. 10:00 AM" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Location *</label>
+              <input type="text" name="location" class="form-control" placeholder="e.g. Main Auditorium" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Entry Fee (₹)</label>
+              <input type="number" name="fee" class="form-control" value="0" min="0" placeholder="0 = Free">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Total Seats</label>
+              <input type="number" name="seats" class="form-control" value="100" min="1">
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Event Image</label>
+              <input type="file" name="image" class="form-control" accept="image/*">
+            </div>
+            <div class="col-12">
+              <label class="form-label">Description</label>
+              <textarea name="description" class="form-control" rows="3" placeholder="Describe the event..."></textarea>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn-primary-ev">➕ Add Event</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ── REGISTRATIONS ── -->
+    <div class="section" id="sec-registrations">
+      <div class="page-title">🎟 All Registrations</div>
+      <div class="page-sub">{{ total_registrations }} total registrations</div>
+      <div class="card-panel">
+        <input type="text" class="search-input" placeholder="🔍 Search by name, event, college..."
+               onkeyup="filterTable('regTbl',this.value)">
+        <div style="overflow-x:auto;">
+        <table class="table" id="regTbl">
+          <thead><tr><th>Ticket ID</th><th>Name</th><th>Event</th><th>College</th><th>Degree</th><th>Registered By</th><th>Action</th></tr></thead>
+          <tbody>
+            {% for r in registrations %}
+            <tr>
+              <td><span style="color:#7c2fe8;font-weight:600;">EVT{{ r.id }}</span></td>
+              <td>{{ r.user_name }}</td>
+              <td>{{ r.title }}</td>
+              <td>{{ r.college }}</td>
+              <td>{{ r.degree }}</td>
+              <td>{{ r.registered_by or '—' }}</td>
+              <td><a href="/delete_registration/{{ r.id }}" class="btn-del" onclick="return confirm('Delete this registration?')">🗑</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── USERS ── -->
+    <div class="section" id="sec-users">
+      <div class="page-title">👥 Registered Users</div>
+      <div class="page-sub">{{ total_users }} users registered</div>
+      <div class="card-panel">
+        <div style="overflow-x:auto;">
+        <table class="table">
+          <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Action</th></tr></thead>
+          <tbody>
+            {% for u in users %}
+            <tr>
+              <td style="color:var(--muted);">#{{ u.id }}</td>
+              <td style="font-weight:600;">{{ u.name }}</td>
+              <td>{{ u.email }}</td>
+              <td><a href="/delete_user/{{ u.id }}" class="btn-del" onclick="return confirm('Delete user {{ u.name }}?')">🗑 Delete</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FEEDBACK ── -->
+    <div class="section" id="sec-feedback">
+      <div class="page-title">💬 User Feedback</div>
+      <div class="page-sub">{{ feedbacks|length }} feedbacks received</div>
+      <div class="card-panel">
+        <div style="overflow-x:auto;">
+        <table class="table">
+          <thead><tr><th>User</th><th>Rating</th><th>Review</th><th>Action</th></tr></thead>
+          <tbody>
+            {% for f in feedbacks %}
+            <tr>
+              <td style="font-weight:600;">{{ f.user_name }}</td>
+              <td><span class="stars">{% for i in range(f.rating|int) %}⭐{% endfor %}</span></td>
+              <td style="max-width:300px;">{{ f.message }}</td>
+              <td><a href="/delete_feedback/{{ f.id }}" class="btn-del" onclick="return confirm('Delete?')">🗑</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── GALLERY ── -->
+    <div class="section" id="sec-gallery-sec">
+      <div class="page-title">🖼 Upload Gallery Photos</div>
+      <div class="page-sub">Add event photos visible to all users</div>
+      <div class="card-panel">
+        <form method="POST" action="/upload_gallery" enctype="multipart/form-data">
+          <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+              <label class="form-label">Select Event</label>
+              <select name="event_name" class="form-select">
+                {% for e in events %}<option value="{{ e.title }}">{{ e.title }}</option>{% endfor %}
+              </select>
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Choose Image</label>
+              <input type="file" name="image" class="form-control" accept="image/*" required>
+            </div>
+            <div class="col-md-3">
+              <button type="submit" class="btn-primary-ev w-100">⬆ Upload Photo</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+
+    <!-- ── ANNOUNCEMENTS ── -->
+    <div class="section" id="sec-announcements">
+      <div class="page-title">📢 Announcements</div>
+      <div class="page-sub">Send announcements to all users</div>
+      <div class="card-panel mb-4">
+        <div class="card-title">➕ New Announcement</div>
+        <form method="POST" action="/admin/announcement">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Title</label><input type="text" name="title" class="form-control" placeholder="Announcement title" required></div>
+            <div class="col-md-3"><label class="form-label">Priority</label>
+              <select name="priority" class="form-select">
+                <option value="normal">🟣 Normal</option>
+                <option value="high">🔴 Urgent</option>
+                <option value="low">🟢 Info</option>
+              </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end"><button type="submit" class="btn-primary-ev w-100">📢 Post</button></div>
+            <div class="col-12"><label class="form-label">Message</label><textarea name="message" class="form-control" rows="3" placeholder="Write your announcement..." required></textarea></div>
+          </div>
+        </form>
+      </div>
+      <div class="card-panel">
+        <div class="card-title">📋 Posted Announcements</div>
+        {% if announcements is defined and announcements %}
+        <table class="table">
+          <thead><tr><th>Title</th><th>Priority</th><th>Date</th><th>Action</th></tr></thead>
+          <tbody>
+            {% for a in announcements %}
+            <tr>
+              <td style="font-weight:600;">{{ a.title }}</td>
+              <td>{{ '🔴 Urgent' if a.priority=='high' else ('🟢 Info' if a.priority=='low' else '🟣 Normal') }}</td>
+              <td>{{ a.created_at }}</td>
+              <td><a href="/admin/announcement/delete/{{ a.id }}" class="btn-del" onclick="return confirm('Delete?')">🗑</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p style="color:var(--muted);text-align:center;padding:20px;">No announcements posted yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+
+    <!-- BROADCAST -->
+    <div class="section" id="sec-broadcast">
+      <div class="page-title">📣 Broadcast Message</div>
+      <div class="page-sub">Send a direct message to ALL users instantly</div>
+      <div class="card-panel">
+        <form method="POST" action="/admin/broadcast">
+          <label class="form-label">Message to all users</label>
+          <textarea name="message" class="form-control" rows="4" placeholder="Type your broadcast message..." required></textarea>
+          <button type="submit" class="btn-primary-ev mt-3">📣 Send to All Users</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- CONTACT MESSAGES -->
+    <div class="section" id="sec-contacts">
+      <div class="page-title">✉️ User Messages</div>
+      <div class="page-sub">Messages sent via Help & Contact page</div>
+      <div class="card-panel">
+        {% if contact_messages is defined and contact_messages %}
+        <table class="table">
+          <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Date</th></tr></thead>
+          <tbody>
+            {% for m in contact_messages %}
+            <tr>
+              <td style="font-weight:600;">{{ m.name }}</td>
+              <td>{{ m.email }}</td>
+              <td>{{ m.subject }}</td>
+              <td style="max-width:220px;color:#a8c4e8;">{{ m.message }}</td>
+              <td style="color:#7a9cc5;font-size:12px;">{{ m.created_at }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p style="color:var(--muted);text-align:center;padding:24px;">No messages yet.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- EXPORT CSV -->
+    <div class="section" id="sec-export">
+      <div class="page-title">📥 Export Data</div>
+      <div class="page-sub">Download registration data as CSV spreadsheet</div>
+      <div class="card-panel mb-4">
+        <div class="card-title">📊 Export All Registrations</div>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:16px;">Download every registration across all events in one file.</p>
+        <a href="/admin/export_all" class="btn-primary-ev text-decoration-none">⬇ Download All Registrations CSV</a>
+      </div>
+      <div class="card-panel">
+        <div class="card-title">📅 Export by Event</div>
+        <div class="row g-3 align-items-end">
+          <div class="col-md-8">
+            <label class="form-label">Select Event</label>
+            <select id="exportEvent" class="form-select">
+              {% for e in events %}<option value="{{ e.id }}">{{ e.title }}</option>{% endfor %}
+            </select>
+          </div>
+          <div class="col-md-4">
+            <button class="btn-primary-ev w-100" onclick="exportEvent()">⬇ Export CSV</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /layout -->
+
+<script>
+function show(id, el){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  el.classList.add('active');
+}
+function exportEvent(){
+  const id = document.getElementById('exportEvent').value;
+  window.location.href = '/admin/export/'+id;
+}
+function filterTable(tableId, val){
+  val = val.toLowerCase();
+  document.querySelectorAll('#'+tableId+' tbody tr').forEach(row=>{
+    row.style.display = row.innerText.toLowerCase().includes(val) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

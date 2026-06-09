@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Help & Contact — EventHub</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans&display=swap" rel="stylesheet">
+<style>
+body{background:#071739;color:#e8f0fe;font-family:'DM Sans',sans-serif;}
+.navbar-brand{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#fff;}
+.navbar-brand span{color:#e040fb;}
+.page-title{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:#fff;}
+.card-panel{background:#0f2444;border:1px solid #1e3a5f;border-radius:16px;padding:28px;margin-bottom:20px;}
+.card-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff;margin-bottom:18px;}
+.faq-item{border-bottom:1px solid #1e3a5f;padding:16px 0;}
+.faq-item:last-child{border:none;}
+.faq-q{font-weight:600;color:#fff;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:15px;}
+.faq-a{color:#7a9cc5;font-size:14px;line-height:1.7;margin-top:10px;display:none;}
+.faq-a.open{display:block;}
+.faq-icon{font-size:18px;transition:transform .2s;color:#e040fb;}
+.faq-item.active .faq-icon{transform:rotate(45deg);}
+.form-control,.form-select{background:rgba(255,255,255,.07) !important;border:1px solid #1e3a5f !important;color:#fff !important;border-radius:10px;}
+.form-control:focus,.form-select:focus{border-color:#7c2fe8 !important;box-shadow:none !important;}
+.form-control::placeholder{color:#7a9cc5 !important;}
+.form-label{font-size:12px;color:#7a9cc5;text-transform:uppercase;letter-spacing:.7px;}
+.btn-submit{background:linear-gradient(135deg,#7c2fe8,#e040fb);border:none;color:#fff;border-radius:10px;padding:12px 28px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;transition:.2s;}
+.btn-submit:hover{opacity:.9;transform:translateY(-1px);}
+.contact-box{background:rgba(124,47,232,.15);border:1px solid rgba(124,47,232,.3);border-radius:12px;padding:18px;display:flex;align-items:center;gap:14px;}
+.contact-icon{width:44px;height:44px;border-radius:12px;background:rgba(124,47,232,.3);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.success-msg{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);border-radius:10px;padding:14px;color:#6ee7b7;font-size:14px;display:none;}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-4 py-3">
+  <a class="navbar-brand" href="/">Event<span>Hub</span></a>
+  <a href="/" class="btn btn-outline-light btn-sm">← Home</a>
+</nav>
+<div class="container py-5">
+  <div class="page-title mb-2">❓ Help & Support</div>
+  <p style="color:#7a9cc5;margin-bottom:32px;">Find answers or contact our team</p>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <!-- FAQ -->
+      <div class="card-panel">
+        <div class="card-title">📋 Frequently Asked Questions</div>
+        {% set faqs = [
+          ("How do I register for an event?", "Go to the Home page → click Register Now on any event card → fill in your details → confirm on the payment page. You'll instantly get a ticket with QR code."),
+          ("How do I download my ticket?", "After registering, go to My Registrations (click your name → My Registrations). Click the Ticket button to download your PDF ticket with QR code."),
+          ("How do I get my certificate?", "Same as ticket — go to My Registrations → click the Certificate button next to any event you registered for."),
+          ("Can I register for the same event twice?", "No, each account can register for each event only once. If you try again, you'll see a notice that you're already registered."),
+          ("How do I reset my password?", "On the login page, click 'Forgot password?' → enter your email → use the reset link provided to set a new password."),
+          ("How do I update my profile?", "Click your name in the top navbar → My Profile → edit your name, phone, college, degree → click Save Changes."),
+          ("What is the Leaderboard?", "The leaderboard ranks students by number of events registered. The more events you join, the higher your rank!"),
+          ("How do I save an event?", "Click the heart ❤️ button on any event card to save it to your wishlist. Access saved events from the dropdown menu → Saved Events."),
+          ("How do I give feedback?", "From the dropdown menu click Feedback → select an event → give a star rating and write your review."),
+          ("Who do I contact for issues?", "Use the contact form below and our team will respond within 24 hours.")
+        ] %}
+        {% for q, a in faqs %}
+        <div class="faq-item" onclick="toggleFaq(this)">
+          <div class="faq-q">{{ q }}<span class="faq-icon">+</span></div>
+          <div class="faq-a">{{ a }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <!-- Contact Info -->
+      <div class="card-panel mb-4">
+        <div class="card-title">📞 Contact Us</div>
+        <div class="d-flex flex-column gap-3">
+          <div class="contact-box"><div class="contact-icon">📧</div><div><div style="font-weight:600;color:#fff;">Email Support</div><div style="font-size:13px;color:#7a9cc5;">admin@eventhub.com</div></div></div>
+          <div class="contact-box"><div class="contact-icon">💬</div><div><div style="font-weight:600;color:#fff;">Admin Login</div><div style="font-size:13px;color:#7a9cc5;">admin@gmail.com</div></div></div>
+          <div class="contact-box"><div class="contact-icon">⏰</div><div><div style="font-weight:600;color:#fff;">Response Time</div><div style="font-size:13px;color:#7a9cc5;">Within 24 hours</div></div></div>
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="card-panel">
+        <div class="card-title">✉️ Send a Message</div>
+        <div class="success-msg" id="successMsg">✓ Message sent! We'll get back to you soon.</div>
+        <div id="contactForm">
+          <div class="mb-3">
+            <label class="form-label">Your Name</label>
+            <input type="text" id="cName" class="form-control" value="{{ session.get('user','') }}" placeholder="Full name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" id="cEmail" class="form-control" placeholder="your@email.com">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Subject</label>
+            <select id="cSubject" class="form-select">
+              <option>Registration Issue</option>
+              <option>Ticket / Certificate</option>
+              <option>Technical Problem</option>
+              <option>Event Query</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Message</label>
+            <textarea id="cMsg" class="form-control" rows="4" placeholder="Describe your issue..."></textarea>
+          </div>
+          <button class="btn-submit" onclick="sendContact()">Send Message →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'chatbot.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function toggleFaq(el){
+  el.classList.toggle('active');
+  el.querySelector('.faq-a').classList.toggle('open');
+}
+async function sendContact(){
+  const name=document.getElementById('cName').value.trim();
+  const email=document.getElementById('cEmail').value.trim();
+  const subject=document.getElementById('cSubject').value;
+  const message=document.getElementById('cMsg').value.trim();
+  if(!name||!email||!message){alert('Please fill all fields.');return;}
+  const fd=new FormData();
+  fd.append('name',name);fd.append('email',email);fd.append('subject',subject);fd.append('message',message);
+  await fetch('/contact',{method:'POST',body:fd});
+  document.getElementById('contactForm').style.display='none';
+  document.getElementById('successMsg').style.display='block';
+}
+</script>
+</body>
+</html>

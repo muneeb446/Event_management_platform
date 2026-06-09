@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Profile — EventHub</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+body{background:#071739;color:white;font-family:'DM Sans',sans-serif;}
+.navbar-brand{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;}
+.navbar-brand span{color:#e040fb;}
+.card-dark{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:28px;}
+.avatar-circle{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,#7c2fe8,#e040fb);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 16px;}
+.section-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;}
+.form-control,.form-select{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.15);color:white;border-radius:10px;}
+.form-control:focus,.form-select:focus{background:rgba(124,47,232,0.15);border-color:#7c2fe8;color:white;box-shadow:none;}
+.form-label{font-size:12px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.7px;}
+.btn-purple{background:linear-gradient(135deg,#7c2fe8,#e040fb);border:none;color:white;border-radius:10px;padding:10px 24px;font-weight:600;}
+.btn-purple:hover{opacity:.9;color:white;}
+.stat-box{background:rgba(124,47,232,0.15);border:1px solid rgba(124,47,232,0.3);border-radius:12px;padding:16px;text-align:center;}
+.stat-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:#e040fb;}
+.badge-cat{background:rgba(124,47,232,0.3);color:#c4b5fd;border-radius:20px;padding:3px 10px;font-size:12px;}
+.alert-success-dark{background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#6ee7b7;border-radius:10px;padding:12px 16px;}
+.alert-error-dark{background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;border-radius:10px;padding:12px 16px;}
+
+.table>:not(caption)>*>*{background-color:transparent !important;color:#e8f0fe !important;border-color:#1e3a5f !important;}
+.table-striped>tbody>tr:nth-of-type(odd)>*{background:#0d1f3c !important;color:#e8f0fe !important;}
+.table-striped>tbody>tr:nth-of-type(even)>*{background:#0b1628 !important;color:#e8f0fe !important;}
+.table tbody td{color:#e8f0fe !important;}
+.table thead th{color:#7a9cc5 !important;background:#0b1e38 !important;}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-4 py-3">
+  <a class="navbar-brand">Event<span>Hub</span></a>
+  <div class="d-flex gap-2">
+    <a href="/my_stats" class="btn btn-outline-info btn-sm">📊 Stats</a>
+    <a href="/leaderboard" class="btn btn-outline-warning btn-sm">🏆 Rank</a>
+    <a href="/" class="btn btn-outline-light btn-sm">🏠 Home</a>
+    <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+  </div>
+</nav>
+<div class="container py-5">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for cat, msg in messages %}
+      <div class="{% if cat=='success' %}alert-success-dark{% else %}alert-error-dark{% endif %} mb-3">
+        {{ '✓' if cat=='success' else '⚠' }} {{ msg }}
+      </div>
+    {% endfor %}
+  {% endwith %}
+
+  <div class="row g-4">
+    <!-- LEFT: profile card -->
+    <div class="col-md-4">
+      <div class="card-dark text-center">
+        <div class="avatar-circle">{{ session.get('user','?')[0].upper() }}</div>
+        <h4 style="font-family:'Syne',sans-serif;">{{ user.name if user else session.get('user') }}</h4>
+        <p style="color:rgba(255,255,255,.5);font-size:13px;">{{ user.email if user else '' }}</p>
+        <hr style="border-color:rgba(255,255,255,.1);">
+        <div class="row g-2 mt-1">
+          <div class="col-6"><div class="stat-box"><div class="stat-num">{{ my_regs|length }}</div><div style="font-size:12px;color:rgba(255,255,255,.5);">Registrations</div></div></div>
+          <div class="col-6"><div class="stat-box"><div class="stat-num">🎓</div><div style="font-size:12px;color:rgba(255,255,255,.5);">Student</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: edit forms -->
+    <div class="col-md-8">
+      <!-- Edit Profile -->
+      <div class="card-dark mb-4">
+        <div class="section-title">✏️ Edit Profile</div>
+        <form method="POST">
+          <input type="hidden" name="action" value="update">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Full Name</label>
+              <input type="text" name="name" class="form-control" value="{{ user.name if user else '' }}" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Phone</label>
+              <input type="text" name="phone" class="form-control" value="{{ user.phone if user and user.phone else '' }}" placeholder="Your phone number">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">College</label>
+              <input type="text" name="college" class="form-control" value="{{ user.college if user and user.college else '' }}" placeholder="Your college name">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Degree</label>
+              <input type="text" name="degree" class="form-control" value="{{ user.degree if user and user.degree else '' }}" placeholder="e.g. BCA, BTech">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-purple mt-3">Save Changes</button>
+        </form>
+      </div>
+
+      <!-- Change Password -->
+      <div class="card-dark mb-4">
+        <div class="section-title">🔒 Change Password</div>
+        <form method="POST">
+          <input type="hidden" name="action" value="change_password">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <label class="form-label">Current Password</label>
+              <input type="password" name="old_password" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">New Password</label>
+              <input type="password" name="new_password" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Confirm Password</label>
+              <input type="password" name="confirm_password" class="form-control" required>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-purple mt-3">Update Password</button>
+        </form>
+      </div>
+
+      <!-- My Registrations -->
+      <div class="card-dark">
+        <div class="section-title">🎟️ My Registrations ({{ my_regs|length }})</div>
+        {% if my_regs %}
+          {% for r in my_regs %}
+          <div class="d-flex align-items-center justify-content-between p-3 mb-2" style="background:rgba(255,255,255,.04);border-radius:10px;border:1px solid rgba(255,255,255,.07);">
+            <div>
+              <div style="font-weight:600;">{{ r.title }}</div>
+              <div style="font-size:12px;color:rgba(255,255,255,.5);">📅 {{ r.date }} &nbsp;|&nbsp; <span class="badge-cat">{{ r.category }}</span></div>
+            </div>
+            <div class="d-flex gap-2">
+              <a href="/download_ticket/{{ r.user_name }}/{{ r.id }}" class="btn btn-sm btn-outline-light">🎫 Ticket</a>
+              <a href="/download_certificate/{{ r.user_name }}/{{ r.id }}" class="btn btn-sm btn-outline-warning">📜 Cert</a>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p style="color:rgba(255,255,255,.4);text-align:center;padding:20px;">No registrations yet. <a href="/" style="color:#e040fb;">Browse events →</a></p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% include 'chatbot.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
